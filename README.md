@@ -104,10 +104,10 @@ giving stationary statistics `<eta eta'> = delta(l-l') (A/tau_c) exp(-|t-t'|/tau
 - **Mass conservation is broken by the noise.** The reaction terms and diffusion conserve
   N_GEF and N_PAK, but additive zero-mean noise on u and q does not. Mass is conserved only on
   average; `SimulationResult.mass_gef` / `mass_pak` track the drift.
-- **No positivity constraint** is imposed, so concentrations can go negative. This does not happen often, but where concentrations do go negative, the solver fails to converge and we discard that run, continuing to the next seed.    
+- **No positivity constraint** is imposed, so concentrations can go negative. This was not observed in trials where noise was only applied to membrane-bound species.   
 - **Grid dependence:** eta is i.i.d. per grid point with variance A/tau_c independent of the
   grid spacing, so the effective noise depends on N (N = 200 throughout).
-- **Alternative implementations do not qualitatively affect results** Gaussian white noise applied to membrane-bound concentrations with the same integrated noise strength, and time-correlated noise applied to all species each produce similar results. We avoid these alternative implementations due to increased frequency of solver failure.
+- **Alternative implementations do not qualitatively affect results** Gaussian white noise applied to membrane-bound concentrations with the same integrated noise strength, and time-correlated noise applied to all species each produce similar results. We avoid these alternative implementations due to increased frequency of solver failure and negative concentrations.
 
 ## Differences from the reference scheme
 
