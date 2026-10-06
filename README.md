@@ -4,7 +4,7 @@ Solver for a 5-species Gef/Pak1 mass-conserving reaction-diffusion (MCRD) model 
 with optional additive noise on the membrane-bound species. The noise model follows
 Dao et al., *Noise-Induced Localized Patterns in Excitable Media: Amplitude versus Persistence*
 (https://arxiv.org/
-abs/2608.10862), adapted to this model (see "Differences from the reference scheme").
+abs/2608.10862), adapted to our system (see "Differences from the reference scheme").
 
 All quantities are in arbitrary units.
 
@@ -75,7 +75,7 @@ giving stationary statistics `<eta eta'> = delta(l-l') (A/tau_c) exp(-|t-t'|/tau
   half steps (fresh noise drawn for each), down to `dt/1024`, after which a `RuntimeError`
   is raised (interpreted as finite-time blow-up). The exception carries `.partial_result`.
 
-## Parameters (parameter set 1)
+## Parameters 
 
 | Quantity | Value |
 |---|---|
@@ -104,10 +104,10 @@ giving stationary statistics `<eta eta'> = delta(l-l') (A/tau_c) exp(-|t-t'|/tau
 - **Mass conservation is broken by the noise.** The reaction terms and diffusion conserve
   N_GEF and N_PAK, but additive zero-mean noise on u and q does not. Mass is conserved only on
   average; `SimulationResult.mass_gef` / `mass_pak` track the drift.
-- **No positivity constraint** is imposed, so concentrations can go negative, but in practice they do not.
+- **No positivity constraint** is imposed, so concentrations can go negative. This does not happen often, but where concentrations do go negative, the solver fails to converge and we discard that run, continuing to the next seed.    
 - **Grid dependence:** eta is i.i.d. per grid point with variance A/tau_c independent of the
   grid spacing, so the effective noise depends on N (N = 200 throughout).
-- The reaction term has unbounded autocatalysis (a u^2); strong noise can cause blow-up.
+- **Alternative implementations do not qualitatively affect results** Gaussian white noise applied to membrane-bound concentrations with the same integrated noise strength, and time-correlated noise applied to all species each produce similar results. We avoid these alternative implementations due to increased frequency of solver failure.
 
 ## Differences from the reference scheme
 
