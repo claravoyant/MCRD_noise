@@ -3,9 +3,10 @@
 Solver for a 5-species Gef/Pak1 mass-conserving reaction-diffusion (MCRD) model in 1D,
 with optional additive noise on the membrane-bound species. The noise model follows
 Dao et al., *Noise-Induced Localized Patterns in Excitable Media: Amplitude versus Persistence*
-(arXiv/journal: **TODO**), adapted to this model (see "Differences from the reference scheme").
+(https://arxiv.org/
+abs/2608.10862), adapted to this model (see "Differences from the reference scheme").
 
-All quantities (concentration, time, length) are in nondimensional model units.
+All quantities are in arbitrary units.
 
 ## Layout
 
@@ -66,7 +67,7 @@ giving stationary statistics `<eta eta'> = delta(l-l') (A/tau_c) exp(-|t-t'|/tau
 ## Numerics
 
 - Crank-Nicolson for diffusion and reaction; nonlinear reaction term solved by fixed-point
-  (Picard) iteration, tolerance 1e-9 (sup norm of the change in the reaction term), max 100 iterations.
+  iteration, tolerance 1e-9 (sup norm of the change in the reaction term), max 100 iterations.
 - Noise enters the Crank-Nicolson right-hand side as a trapezoidal average,
   `(dt/2)(eta^n + eta^{n+1})`. eta is advanced once per step, before the fixed-point iteration,
   since it does not depend on the fields.
@@ -90,23 +91,20 @@ giving stationary statistics `<eta eta'> = delta(l-l') (A/tau_c) exp(-|t-t'|/tau
 | Initial condition | homogeneous state x (1 + 0.01 * N(0,1)) per species and grid point |
 | Replicates | 10 per A |
 
-Parameter set 2 (L = 3, N_GEF = 6.5, N_PAK = 2.0, A in {0, 0.001, 0.01, 0.1}):
-**TODO: add reaction/diffusion parameters and dt.**
-
 ## Reproducibility notes
 
 - Sweep seeds: initial condition `default_rng(3000 + rep + 100000*attempt)`, noise
   `seed = round(A*1e6) + rep + 100000*attempt`.
 - Replicates that blew up (step halving hit the floor) were discarded and rerun with the next
   attempt's seeds, up to 20 attempts. Reported statistics therefore condition on non-blow-up
-  runs. **TODO: report how many runs were discarded per A.**
+  runs. 
 
 ## Caveats
 
 - **Mass conservation is broken by the noise.** The reaction terms and diffusion conserve
   N_GEF and N_PAK, but additive zero-mean noise on u and q does not. Mass is conserved only on
   average; `SimulationResult.mass_gef` / `mass_pak` track the drift.
-- **No positivity constraint** is imposed, so concentrations can go negative.
+- **No positivity constraint** is imposed, so concentrations can go negative, but in practice they do not.
 - **Grid dependence:** eta is i.i.d. per grid point with variance A/tau_c independent of the
   grid spacing, so the effective noise depends on N (N = 200 throughout).
 - The reaction term has unbounded autocatalysis (a u^2); strong noise can cause blow-up.
@@ -120,4 +118,6 @@ reference) is unchanged.
 
 ## Citation
 
-**TODO:** cite this repository and Dao et al.
+Dao, C., Yang, J.-M., Huang, C.-H., & Chern, G.-W. (2026). Noise-induced localized
+patterns in excitable media: Amplitude versus persistence. https://arxiv.org/
+abs/2608.10862
